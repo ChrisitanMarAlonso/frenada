@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Policia Cientifica Rio Grande</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #contenedor {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+    }
+
+    input[type="button"] {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #resultado {
+      width: 100%;
+      padding: 5px;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+
+    #linea {
+      position: relative;
+      height: 20px;
+      background-color: gray;
+    }
+
+    #avance {
+      position: relative;
+      height: 20px;
+      background-color: green;
+      width: 0;
+      transition: width 5s ease;
+    }
+
+    #imagen {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin-top: 20px;
+      position: relative;
+      left: 0;
+      transition: left 5s ease;
+    }
+
+    /* Estilos para pantallas más pequeñas */
+    @media screen and (max-width: 480px) {
+      #contenedor {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="contenedor">
+    <h1>Calculo de Distancia de Frenado</h1>
+
+    <form>
+      <label for="valor1">Velocidad (km):</label>
+      <input type="number" id="valor1" name="valor1" value="30">
+
+      <label for="valor2">Tiempo de Reaccion:</label>
+      <input type="number" id="valor2" name="valor2" value="1.5">
+
+      <label for="valor3">Distancia de Parada:</label>
+      <input type="number" id="valor3" name="valor3" value="0.7"><br><br>
+
+      <input type="button" value="Calcular" onclick="calcularSuma()"><br><br>
+
+      <label for="resultado">Distancia total recorrida para frenado en mts.:</label>
+      <input type="text" id="resultado" name="resultado" readonly><br><br>
+    </form>
+
+    <div id="linea">
+      <div id="avance"></div>
+    </div>
+
+    <img id="imagen" src="file:///C:/xampp/htdocs/f-septiembre/boton//auto.jpg" alt="Imagen de desplazamiento">
+
+    <audio id="audio" src="/boton/Alarm10.wav"></audio>
+  </div>
+
+  <script>
+    function calcularSuma() {
+      var valor1 = parseFloat(document.getElementById("valor1").value);
+      var valor2 = parseFloat(document.getElementById("valor2").value);
+      var valor3 = parseFloat(document.getElementById("valor3").value);
+
+      var resultado = ((valor1/3.6) * valor2)  + ((valor1/3.6) * (valor1/3.6)) / (2 * 9.81 * valor3);
+
+      document.getElementById("resultado").value = resultado;
+
+      var imagen = document.getElementById("imagen");
+      var linea = document.getElementById("linea");
+      var avance = document.getElementById("avance");
+
+      var desplazamiento = (valor1 / 170) * 100; // 170 es el máximo valor de velocidad
+
+      desplazamiento = Math.min(desplazamiento, 100);
+
+      imagen.style.left = desplazamiento + "%";
+      avance.style.width = desplazamiento + "%";
+
+      // Ajustar la velocidad de transición en función de la velocidad del automóvil
+      var velocidadTransicion = (170 - valor1) / 100 + 0.1;
+      imagen.style.transition = "left " + velocidadTransicion + "s ease";
+      avance.style.transition = "width " + velocidadTransicion + "s ease";
+
+      // Reproducir el sonido si el valor1 es mayor a 130
+      if (valor1 > 130) {
+        var audio = document.getElementById("audio");
+        audio.play();
+      }
+    }
+  </script>
+</body>
+</html>
